@@ -1,0 +1,162 @@
+//home bladenya
+
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Dashboard</div>
+                <div class="card-body">        
+                    @livewire('profil-create')
+                   </div>
+                <div class="card-body">
+                    @livewire('profil-index')
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+
+profil index di controller
+<?php
+
+namespace App\Http\Livewire;
+
+use Livewire\Component;
+use App\profil;
+use Livewire\WithPagination;
+
+class ProfilIndex extends Component
+{
+    use WithPagination; 
+
+    public function render()
+    {
+      
+        return view('livewire.profil-index', [
+            'profil' => profil::latest()->paginate(10),
+        ]);
+    }
+   
+    protected $listeners = [
+        'segarkan' => 'tanganiSegarkan',
+    ];
+    public function tanganiSegarkan ( $data_baru)
+    {
+      session()->flash('message', 'data '. $data_baru['nama'] .' berhasil diperbaharui ');
+    } 
+
+
+   
+}
+
+//profiil index komponen
+<div>
+
+    @if(session()->has('message'))
+    <div class="alert alert-message">
+        {{ session('message') }}
+    </div>
+    @endif
+  
+  <table class="table table-striped table-inverse table-responsive">
+      <thead class="thead-inverse">
+          <tr>
+              <th>no</th>
+              <th>nama</th>
+              <th>keterampilan</th>
+              <th>aksi</th>
+          </tr>
+          </thead>
+          <tbody>
+              @php
+              $no = 1;
+                  @endphp
+             
+              @foreach ($profil as $item)              
+              
+              <tr>
+              <td scope="row">{{$no++}}</td>
+                  <td>{{$item->nama}}</td>
+                  <td>{{$item->keterampilan}}</td>
+                  <td>
+                      <button type="button" class="btn btn-info">edit</button>
+                      <button type="button" class="btn btn-warning">delete</button>
+                  </td>
+              </tr>
+              @endforeach
+          </tbody>
+  </table>
+  {{$profil->links()}}
+</div>
+
+profil create komponen
+<div>
+  
+ <form action="#">
+    <div class="form-group">
+        <label for="">nama</label>
+        <input type="text"  wire:model="nama" id="" class="form-control" placeholder="" aria-describedby="helpId">
+
+        @error('nama')
+        <small id="helpId" class="text-muted">{{$message}}</small>
+        @enderror
+       
+
+    </div>
+      <div class="form-group">
+        <label for="">keterampilan</label>
+        <input type="text" wire:model="keterampilan" id="" class="form-control" placeholder="" aria-describedby="helpId">
+
+      
+        @error('keterampilan')
+        <small id="helpId" class="text-muted">{{$message}}</small>
+        @enderror
+
+      </div>
+      <button type="button"  wire:click="kirim()" class="btn btn-warning">proses</button>
+ </form>
+</div>
+
+profil create controller
+<?php
+
+namespace App\Http\Livewire;
+
+use Livewire\Component;
+use App\profil;
+class ProfilCreate extends Component
+{
+    public $data, $nama, $keterampilan;
+    public function render()
+    {
+        return view('livewire.profil-create');
+    }
+
+    private function resetInput()
+    {
+        $this->nama = null;
+        $this->keterampilan = null;
+    }
+    public function kirim()
+    {
+        $this->validate([
+            'nama' => 'required|min:5',
+            'keterampilan' => 'required'
+        ]);
+
+       $data_baru = profil::create([
+            'nama' => $this->nama,
+            'keterampilan' => $this->keterampilan
+        ]);
+        $this->emit('segarkan', $data_baru );
+        $this->resetInput();
+      
+    }
+}
+
+
