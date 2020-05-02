@@ -1,0 +1,10 @@
+//install
+composer require livewire/livewire
+
+//setting style css dan javascript
+  @livewireStyles
+    @livewireScripts
+    
+ //buat komponen
+ php artisan make:livewire nama_komponen
+ 
