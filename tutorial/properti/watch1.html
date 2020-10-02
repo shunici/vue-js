@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>  
+    
+    <title>Document</title>
+</head>
+<body>
+ <a href="https://medium.com/gits-apps-insight/mengenal-macam-macam-properti-pada-vue-js-computed-methods-watcher-334b2deced7c">    sumber</a>
+    <div id="app">
+    
+     <input type="text" v-model="pesan">
+     {{keterangan}}
+    </div>
+
+
+    <script>
+        var objek =  {
+          pesan : '',
+          keterangan : '',
+        }
+
+        var vp = new Vue({
+            el :'#app',
+            data :objek,   
+            watch : {           
+                    pesan : function(){
+                       this.keterangan = 'sedang mengetik .....';
+                    },                   
+            },
+        })
+    </script>
+</body>
+</html>
