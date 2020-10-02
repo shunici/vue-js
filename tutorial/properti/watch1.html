@@ -35,3 +35,50 @@
     </script>
 </body>
 </html>
+
+//contoh lain dari penggunaan watch
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>  
+    
+    <title>Document</title>
+</head>
+<body>
+ <a href="https://medium.com/gits-apps-insight/mengenal-macam-macam-properti-pada-vue-js-computed-methods-watcher-334b2deced7c">    sumber</a>
+    <div id="app">
+    
+     km <input type="text" v-model="km">
+     <br>
+     m <input type="text" v-model="m">
+   
+    </div>
+
+
+    <script>
+        var objek =  {
+          km : 1,
+          m : 100,
+        }
+
+        var vp = new Vue({
+            el :'#app',
+            data :objek,   
+            watch : {           
+                   km : function(val){
+                       this.km = val;
+                       this.m = val*100;
+                   },
+                   m : function (val){
+                       this.m = val;
+                       this.km = val/100;
+                   }
+            },
+        })
+    </script>
+</body>
+</html>
+
