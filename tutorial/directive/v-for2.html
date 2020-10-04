@@ -1,0 +1,28 @@
+  <h2>Perulangan v-for directive</h2>
+      <p>Perulangan dengan teknik mengambil index</p>
+      <div id="app">             
+            <ul>        
+              <li v-for="(row, index) in favorite">{{row}} {{index}}</li>            
+            </ul>
+
+            <p>jika ingin menaruh nomor urut</p>
+            <ul>        
+                   <li v-for="(row, index) in favorite">{{row}} {{index+1}}</li>            
+            </ul>
+
+            <p>Jika ingin melakukan increment perulangan dengan teknik v-for</p>
+            <ul>
+                  <li v-for="x in 5">{{x}}</li>
+            </ul>
+      </div>   
+   
+      <script>
+        var aplikasi =  new Vue({
+            el: '#app',
+            data: {
+               favorite : ['main gitar', 'main bola', 'koding'],
+            },
+           
+          
+         })
+      </script>
