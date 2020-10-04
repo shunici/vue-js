@@ -1,0 +1,30 @@
+//contoh 1
+//taruh ini di body
+
+ 
+      <style>
+         .active {
+            background: red;
+         }
+      </style>
+      <div id = "app">
+         <div v-bind:class = "{active:isactive}"><b>{{title}}</b></div>
+         <button v-on:click="klik">klik</button>
+      </div>
+      <script type = "text/javascript">
+         var vm = new Vue({
+            el: '#app',
+            data: {
+               title : "CLASS BINDING",
+               isactive : true
+            },
+            methods : {
+               klik : function (){                 
+                  this.isactive = false;
+               }
+            }
+         });
+      </script>
+      
+    //tutup
+
