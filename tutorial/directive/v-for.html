@@ -1,0 +1,28 @@
+     
+      <h2>Perulangan v-for directive</h2>
+      <p>Perulangan ini tidak menggunakan data objek, hanya dari array</p>
+      <div id="app">
+         <p>Cara pertama</p>
+         <ul>        
+            <li v-for="row in favorite">{{row}}</li>            
+         </ul>
+         <p>Cara kedua</p>
+         <ul>         
+            <li v-for="row of favorite">{{row}}</li>            
+         </ul>
+         <p>Cara ketiga</p>
+         <ul>      
+            <li v-for="row in favorite" v-text="row"></li>            
+         </ul>
+      </div>   
+   
+      <script>
+        var aplikasi =  new Vue({
+            el: '#app',
+            data: {
+               favorite : ['main gitar', 'main bola', 'koding'],
+            },
+           
+          
+         })
+      </script>
