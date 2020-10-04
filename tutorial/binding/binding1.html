@@ -28,3 +28,33 @@
       
     //tutup
 
+//contoh 2
+      <p>secara default class css nya info, tapi ketika isActive true maka css nya menggunakan class active</p>
+      <style>
+         .info {
+          
+            background-color: #BDE5F8;
+         }       
+         .active {           
+            background-color: #DFF2BF;
+         }
+         .displayError{           
+            background-color: #FFBABA;
+         }
+      </style>
+      <div id = "app">
+         <div class = "info"  v-bind:class = "{ active: isActive, 'displayError': hasError }">
+            {{title}}
+         </div>
+      </div>
+      <script type = "text/javascript">
+         var vm = new Vue({
+            el: '#app',
+            data: {
+               title : "This is class binding example",
+               isActive : false,
+               hasError : false
+            }
+         });
+      </script>
+//tutup contoh 2
