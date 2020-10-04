@@ -1,0 +1,38 @@
+<style>
+   .biruClass {
+      background-color:blue;
+   }
+   .merahClass {
+      background-color: red;
+   }
+
+</style>
+kalo diklik biru maka background color berubah menjadi biru dan seterusnya, ini adalah cara penggunaan v-bind:class
+      <div id="app">
+       
+         <div v-bind:class="{ biruClass: biru, 'merahClass' : merah }">tes</div>
+         <button v-on:click="satu">merah</button>
+         <button v-on:click="dua">biru</button>
+         
+      </div>
+
+      <script>
+         new Vue({
+            el: '#app',
+            data: {
+              biru : false,
+              merah : false,
+            },
+            methods : {
+               satu : function (){
+                  this.merah = true;
+                  this.biru = false;
+               },
+               dua : function (){
+                  this.merah = false;
+                  this.biru = true;
+               }
+            }  
+          
+         })
+      </script>
