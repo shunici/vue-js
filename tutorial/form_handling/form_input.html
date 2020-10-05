@@ -1,0 +1,30 @@
+      
+form input
+<div id="app">
+
+<input type="text" v-model="isian_baru"> <button @click="klik">klik</button>
+<ul>
+   <li v-for="row in isian">{{row}}</li>
+</ul>
+
+</div>
+
+<script>
+   var vp = new Vue({
+      el: '#app',
+      data : {  
+      isian : [
+        'warna', 'bola', 'messi', 'ronaldo'
+      ],
+      isian_baru : ''
+      },    
+      methods: {
+         klik : function(){
+            this.isian.push(this.isian_baru);
+            this.isian_baru = '';
+         }
+      },
+    
+     
+   })
+</script>
