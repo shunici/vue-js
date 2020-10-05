@@ -1,0 +1,29 @@
+      <style>
+                  .aktif {
+            padding: 1px;
+            background-color: salmon;                 
+         }
+      </style>
+menu aktif
+<div id="app">
+<button v-bind:class="{aktif:menu == 'home'}" @click="ganti_menu('home')">Home</button>
+<button v-bind:class="{aktif:menu == 'about'}" @click="ganti_menu('about')">About</button>
+<button v-bind:class="{aktif:menu == 'blog'}" @click="ganti_menu('blog')">Blog</button>
+</div>
+
+<script>
+   var vp = new Vue({
+      el: '#app',
+      data : {  
+      menu : 'home' 
+      },    
+      methods: {
+     ganti_menu : function(isi){
+        this.menu = isi;
+     }
+      },
+    
+     
+   })
+</script>
+   
