@@ -1,0 +1,29 @@
+<div id="app">
+
+<ul>
+   <li v-for="row in warna">{{row}}</li>
+</ul>
+
+<input type="text" v-model="baru"> <br>
+<button @click="tambah">tambah</button>
+<button @click="hapus">hapus</button>
+</div>
+
+<script>
+   var vp = new Vue({
+      el: '#app',
+      data : {
+         warna : ['kuning', 'merah', 'hijau'],
+         baru : '',
+      },    
+      methods: {
+         tambah : function(){
+            return this.warna.push(this.baru);
+         },
+         hapus : function(){
+            return this.warna=[];
+         }
+      },
+     
+   })
+</script>
