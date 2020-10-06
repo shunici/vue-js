@@ -26,3 +26,40 @@
       },
    })
       </script>
+
+
+    program belum sempurna karena fungsi edit update belum berjalan dengan baik
+      <div id="app">         
+         <input type="text" v-model="data_baru"> <button v-on:click="proses">proses</button>
+         <ul>
+            <li v-for="(row, index) in warna">{{row}}  ini index {{index}}
+               <a href="#" v-on:click.prevent="hapus(index)">hapus</a>
+               <a href="#" v-on:click.prevent="edit(row)">edit</a>
+            </li>
+          
+         </ul>        
+      </div> 
+
+      <script>      
+   new Vue({
+      el : '#app',
+      data : {
+         warna : ['hijau', 'merah', 'biru'],
+         data_baru : '',
+      },
+      methods: {
+         proses : function (){
+            if(this.data_baru != ""){
+               this.warna.push(this.data_baru);
+                this.data_baru = "";
+            }           
+         },
+         hapus : function(data_index){
+            this.warna.splice(data_index, 1);
+         },
+         edit : function(data_edit){
+           this.data_baru = data_edit;
+         }
+      },
+   })
+      </script>
