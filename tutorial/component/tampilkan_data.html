@@ -1,0 +1,76 @@
+   <style>
+         body {
+            background-color: grey;
+         }      
+         .header {
+            background-color: yellow;
+            padding: 5px;
+         }
+         .body {
+            background-color: greenyellow;
+            padding: 5px;
+         }
+         .footer {
+            background-color: burlywood;
+            padding: 5px;
+         }
+      </style> 
+
+      <div id="app">          
+         <header-header></header-header>
+         <body-body
+         v-for="row in footballer"
+         v-bind:key="row.id"
+         v-bind:nama="row.nama"
+         v-bind:klub="row.klub"
+         ></body-body>
+         <footer-footer></footer-footer>
+
+
+            
+      </div> 
+
+      <script>  
+
+let pemain_bola = [
+   {
+      id : 1,
+      nama : 'Ronaldo',
+      klub : 'Juventus',      
+   },
+   {
+      id : 2,
+      nama : 'Messi',
+      klub : 'Barcelona',      
+   },
+   {
+      id : 3,
+      nama : 'Neymar',
+      klub : 'Paris Sain Germain',      
+   },
+];
+
+//ini komponen
+Vue.component('header-header', {
+  template : '<div class="header">Header</div>'
+})
+Vue.component('body-body', {
+   props: ['nama', 'klub'],
+  template : `<div class="body">
+
+  {{nama}} adalah pemain sepak bola dari klub {{klub}}</div>
+  `
+})
+Vue.component('footer-footer', {
+  template : '<div class="footer">footer</div>'
+})
+
+   new Vue({
+      el : '#app',
+      data : {
+         footballer : pemain_bola,
+         data_baru : '',
+      },
+       
+   })
+      </script>
