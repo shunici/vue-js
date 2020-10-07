@@ -1,4 +1,5 @@
-   <style>
+
+      <style>
          body {
             background-color: grey;
          }      
@@ -23,11 +24,9 @@
          v-bind:key="row.id"
          v-bind:nama="row.nama"
          v-bind:klub="row.klub"
+         v-on:sapa="onSapa(row.nama)"
          ></body-body>
-         <footer-footer></footer-footer>
-
-
-            
+         <footer-footer></footer-footer>                   
       </div> 
 
       <script>  
@@ -57,7 +56,7 @@ Vue.component('header-header', {
 Vue.component('body-body', {
    props: ['nama', 'klub'],
   template : `<div class="body">
-
+   <button v-on:click="$emit('sapa')">Sapa</button>
   {{nama}} adalah pemain sepak bola dari klub {{klub}}</div>
   `
 })
@@ -71,6 +70,12 @@ Vue.component('footer-footer', {
          footballer : pemain_bola,
          data_baru : '',
       },
+
+      methods : {
+         onSapa : function(tes){
+           alert('hay ' +tes);
+         }
+      }
        
    })
       </script>
