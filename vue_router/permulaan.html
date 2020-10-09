@@ -1,0 +1,56 @@
+<html>
+   <head>
+      <title>VueJs Instance</title>
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vue"></script> 
+      <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+     
+   </head>
+
+   <body>
+
+<div id="app">
+
+
+<router-link to="/about">about</router-link>
+<router-link to="/menu">menu</router-link>
+<h2>{{pesan}}</h2>
+<router-view></router-view>
+</div>
+      <script>  
+
+
+
+var about = {
+   template : '<h2>ini about</h2>'
+}
+
+var menu = {
+   template : '<h2>ini menu</h2>'
+}
+
+
+var routes = [
+   {
+      path : '/about', component : about
+   },
+   {
+      path : '/menu', component : menu
+   }
+]
+
+const router = new VueRouter({
+   routes
+})
+
+   new Vue({
+      el : '#app',
+     router,
+     data : {
+        pesan : 'shuniii'
+     }
+       
+   })
+      </script>
+   </body>
+</html>
