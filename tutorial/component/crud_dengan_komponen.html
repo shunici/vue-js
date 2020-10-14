@@ -1,0 +1,47 @@
+      <div id = "app">
+   nama         <input type="text" v-model="nama">
+   klub <input type="text" v-model="klub">
+   <button @click="tambah">proses</button>
+
+
+         <data_bola
+         v-for="item in pemain" :key="item.id"
+         v-bind:nama="item.nama"
+         v-bind:klub="item.klub"
+         ></data_bola>     
+      </div>
+     
+    <script>
+
+      var pemain_bola = [
+         {id:1, nama:'ronaldo', klub:'juventus'},
+         {id:2, nama:'figo', klub:'intermilan'},
+         {id:3, nama:'messi', klub:'barcelona'},        
+      ]
+
+      Vue.component('data_bola',{
+         props : ['nama', 'klub'],
+         template : `  <ul>
+                  <li>pemain ini bernama {{nama}} dan saat ini dia bermain untuk {{klub}}</li>
+               </ul>
+            `
+      })
+
+       new Vue({
+          el:'#app',
+          data : {
+            pemain : pemain_bola,
+            nama : '',
+            klub : ''
+          },
+          methods: {
+             tambah() {
+               var data_id = this.pemain.length+1;
+               var nama = this.nama;
+               var klub = this.klub;
+               this.pemain.push({id:data_id, nama:nama, klub:klub});
+             },
+          },
+         
+       })
+    </script>
