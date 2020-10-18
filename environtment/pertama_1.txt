@@ -1,0 +1,9 @@
+dengan vue cli
+npm install -g @vue/cli
+vue create myproject
+cd myprojects
+npm run serve
+
+
+untuk cara  lain bisa masuk sini
+https://www.tutorialspoint.com/vuejs/vuejs_environment_setup.htm
