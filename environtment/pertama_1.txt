@@ -7,3 +7,9 @@ npm run serve
 
 untuk cara  lain bisa masuk sini
 https://www.tutorialspoint.com/vuejs/vuejs_environment_setup.htm
+
+
+//jika ingin menginstall vuex
+
+npm install vuex --save
+
