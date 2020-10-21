@@ -1,1 +1,102 @@
-tes
+//app.vue
+<template>
+  <div>
+  <satu-komponen></satu-komponen>
+   <dua-komponen></dua-komponen>
+ 
+  </div>
+</template>
+
+<script>
+import satuData from './components/satuData'
+import duaData from './components/duaData'
+
+export default {
+  name: 'App',
+  components: {
+    'satu-komponen' : satuData,
+    'dua-komponen' : duaData
+
+  },
+
+
+
+ 
+}
+</script>
+
+// src/store/store.js
+
+<script>
+  import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+export const store = new Vuex.Store({
+    state: {
+        warna : ['merah', 'hijau']
+    },
+  
+  })
+</script>
+
+// main.js
+
+<script>
+  import Vue from 'vue'
+import App from './App'
+import {store} from './store/store'
+Vue.config.productionTip = false
+
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  store : store,
+  components: { App },
+  template: '<App/>'
+})
+
+</script>
+
+// components/satuData.vue
+<template>
+  <div>
+  ini berasal dari komponen satu
+<ul><li v-for="item in warna">{{item}}</li></ul>
+  </div>
+</template>
+
+<script>
+
+
+export default {
+computed : {
+    warna () {
+        return this.$store.state.warna
+    }
+}
+ 
+}
+</script>
+
+// components/duaData.vue
+<template>
+  <div>
+  ini berasal dari komponen dua
+<ul><li v-for="item in warna">{{item}}</li></ul>
+  </div>
+</template>
+
+<script>
+
+
+export default {
+computed : {
+    warna () {
+        return this.$store.state.warna
+    }
+}
+ 
+}
+</script>
