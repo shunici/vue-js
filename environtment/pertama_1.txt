@@ -13,3 +13,8 @@ https://www.tutorialspoint.com/vuejs/vuejs_environment_setup.htm
 
 npm install vuex --save
 
+jika sudah install vuex,
+harap membuat folder store di src
+utk penjelasan import datanya bisa lihat link dibawah
+https://vuex.vuejs.org/installation.html#npm
+
