@@ -1,0 +1,69 @@
+
+
+app.vue
+
+<template>
+  <div>
+     <produk-list-one v-bind:juventus="juventus"></produk-list-one>
+
+  </div>
+</template>
+
+<script>
+
+
+import produkListOne from './components/produkListOne.vue';
+export default {
+  components : {
+    'produk-list-one' : produkListOne
+  },
+ name: 'App',
+  data (){
+    return {     
+      juventus : [
+          {id: 1, nama: 'ronaldo', nomor : 7},
+          {id: 2, nama: 'buffon', nomor : 1},
+          {id: 3, nama: 'dybala', nomor : 10},
+          {id: 4, nama: 'rabiot', nomor : 3},
+      ]
+    }
+  }
+
+}
+</script>
+
+
+components/produkListOne.vue
+<template>
+  <div>
+        <h2>ini adalah satu komponen</h2>
+<ul><li v-for="item in juventus" :key="item.id">{{item.nama}}</li></ul>
+  <h2>{{pesan}}</h2>
+  </div>
+</template>
+
+<script>
+export default {
+  props : ['juventus'],
+  data (){
+    return {     
+      pesan : 'aku cinta hidup ini'
+    }
+  }
+
+}
+</script>
+
+// main.js
+<script>
+import Vue from 'vue'
+
+import App from './App.vue'
+
+
+Vue.config.productionTip = false
+
+new Vue({
+  render: h => h(App),
+}).$mount('#app')
+</script>
