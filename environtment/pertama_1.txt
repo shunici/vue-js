@@ -18,3 +18,16 @@ harap membuat folder store di src kemudian buat file dengan nama store.js
 utk penjelasan import datanya bisa lihat link dibawah
 https://vuex.vuejs.org/installation.html#npm
 
+//jika ingin install vue js dengan web pack
+# untuk install vue-cli secara global di komputer kamu
+npm install --global vue-cli# untuk membuat project baru dengan nama belajarvuex
+vue init webpack belajarvuex# selanjutnya masuk ke dalam folder belajarvuex
+cd belajarvuex# install dependencies
+npm install# run aplikasi
+npm run dev
+
+//jika ingin menambah vuex
+npm install vuex --save
+
+lihat penjelesan dibawah penting untuk web pack
+https://medium.com/@alziqziq/install-vuex-part2-vuex-16bcae69896b
