@@ -1,5 +1,6 @@
 dengan vue cli
-npm install -g @vue/cli
+npm install -g @vue/cli   // ini jika sudah terinstall langsung tahap selanjutnya aja
+
 vue create myproject
 cd myprojects
 npm run serve
