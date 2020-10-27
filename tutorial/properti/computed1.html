@@ -1,35 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>  
-    
-    <title>Document</title>
-</head>
-<body>
-    <div id="app">
-        {{angka1}} ditambah dengan {{angka2}} sama dengan {{jumlah}}
-     
-    </div>
+     properti computed membuat perubahan data menjadi real time
+      <div id="app">
+         <input type="number" v-model="angka1">
+         <input type="number" v-model="angka2">
+         <h2>{{jumlah}}</h2>           
+      </div>
 
 
-    <script>
-        var objek =  {
-            angka1 : 1,
-            angka2 : 1,
-        }
+<script>
+   var tes = new Vue({ 
+      el : '#app',
+      data : {
+         angka1 : 5,
+         angka2 : 5,           
+      },
+      computed: {
+         jumlah : function(){
+            return this.angka1 + this.angka2;
+         }
+      }
+   })
+</script>
 
-        var vp = new Vue({
-            el :'#app',
-            data :objek,   
-            computed : {           
-                    jumlah : function (){
-                        return this.angka1+this.angka2;
-                    },                   
-            },
-        })
-    </script>
-</body>
-</html>
+/////
