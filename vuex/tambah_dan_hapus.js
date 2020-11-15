@@ -15,8 +15,12 @@
                  nama : '',
                  klub : ''
              }
-         }
+         },
+          hapus (isian){
+                this.$store.dispatch('hapus', isian )
+            }
      }
+    
     }
     
   // store.js
