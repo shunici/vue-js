@@ -1,0 +1,174 @@
+daftar file program
+
+src/main.js
+src/store.js
+src/App.vue
+src/components/tampilSatu.vue
+src/components/tampilDua.vue
+
+
+=====================================
+src/main.js
+<script>  
+import Vue from 'vue'
+import App from './App.vue'
+import store from './store'
+
+Vue.config.productionTip = false
+
+new Vue({
+  store,
+  render: h => h(App),
+}).$mount('#app')
+
+</script>
+======================================
+src/store.js
+<script>
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+    state: {
+        pemain : [
+            {nama : 'ronaldo', nomor : 7, klub : 'juventus'},
+            {nama : 'messi', nomor : 10,  klub : 'barcelona'}
+        ]
+      
+    },
+    mutations : {
+        DISIMPAN : (state, tes) => {
+            state.pemain.push(tes)
+        },
+        DIHAPUS : (state, tes) => {
+            state.pemain.splice(tes, 1)
+        }
+    },
+    actions : {
+        simpan({commit}, tes) {
+            commit('DISIMPAN', tes )
+        },
+        hapus ({commit}, tes) {
+            commit('DIHAPUS', tes)
+        }
+    }
+
+})    
+</script>
+================================
+ src/App.vue
+
+<template>
+  <div id="app">
+
+<input type="text" v-model="baru.nama">
+<input type="number" v-model="baru.nomor">
+<input type="text" v-model="baru.klub"> <br>
+<button @click="tambah">Tambah</button>
+
+  <tampil-satu></tampil-satu>  
+  --------------------------------------------------
+  <tampil-dua></tampil-dua>
+  </div>
+</template>
+
+
+<script>
+import tampilSatu from './components/tampilSatu.vue';
+import tampilDua from './components/tampilDua.vue';
+
+
+	export default {  
+    //inisiasi data baru
+  data (){
+    return {
+        baru : [
+           {nama : '', nomor : null, klub : ''},
+        ]     
+    }
+  },
+   components : {
+      tampilSatu,
+      tampilDua
+   },
+
+//tambah data
+   methods : {
+     tambah(){     
+     this.$store.dispatch('simpan', this.baru);
+        this.baru = {
+          nama : '',
+          nomor : null,
+          klub : ''
+        }
+     }    
+   } 
+
+      
+  }      		
+</script>
+
+========================================================
+   src/components/tampilSatu.vue
+<template>
+  <div id="satu">
+
+    <h2>Tampil Satu</h2>
+<ul>
+  <li v-for="(item, index) in orang" :key="index">dia adalah {{item.nama}} nomor punggung {{item.nomor}} sekarang dia berada di {{item.klub}}</li>
+</ul>
+
+  </div>
+</template>
+
+<script>
+	export default {    
+    computed : {
+      orang : function(){
+        return this.$store.state.pemain;
+      }
+    }
+      
+  }      		
+</script>
+===================================================
+  src/components/tampilDua.vue
+
+  <template>
+  <div id="dua">
+
+    <h2>Tampil dua</h2>
+<ul>
+  <li v-for="(item, index) in orang" :key="index">dia adalah {{item.nama}} nomor punggung {{item.nomor}} sekarang dia berada di {{item.klub}}  <button @click="hapus(index)">hapus</button></li>
+</ul>
+
+  </div>
+</template>
+
+<script>
+	export default {   
+    //mengambil data 
+   computed : {
+      orang : function(){
+        return this.$store.state.pemain;
+      }
+    },
+    methods : {
+      hapus (isian) {
+        return this.$store.dispatch('hapus', isian);
+      }
+    }
+      
+  }      		
+</script>
+
+
+
+
+
+
+    
+
+  
