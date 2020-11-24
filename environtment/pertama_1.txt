@@ -19,6 +19,19 @@ harap membuat folder store di src kemudian buat file dengan nama store.js
 utk penjelasan import datanya bisa lihat link dibawah
 https://vuex.vuejs.org/installation.html#npm
 
+
+
+pada saat kita menggunakan vuex, jika menggunakan this.$store masih bisa dilakukan. tetapi tidak bisa kita menggunakan {mapAction} atau ...mapAction[('isian')]
+
+maka soslusinya adalah install babelrc, dikarenakan babelrc menggunakan javascript es6
+//jika ingin install babelrc
+npm install babel 
+atau cari di google, biasanya ketika kita install vue js dengan lengkap itu sudah termasuk babel
+
+
+
+
+
 //jika ingin install vue js dengan web pack
 # untuk install vue-cli secara global di komputer kamu
 npm install --global vue-cli# untuk membuat project baru dengan nama belajarvuex
