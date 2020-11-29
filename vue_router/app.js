@@ -42,3 +42,13 @@ const app = new Vue({
         App
     }
 });
+
+
+untuk penyambut di view
+
+ini untuk link
+ <router-link to="/about" >Home</router-link>
+             <router-link to="/home" >Home</router-link>
+
+ini untuk view
+  <router-view></router-view>
