@@ -1,0 +1,290 @@
+//web php
+<?php
+Route::get('/{any}', function () {
+    return view('welcome');
+})->where('any', '.*');
+
+?>
+
+resources/js/components/navBar.vue
+<template>
+    <div>
+    <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: black;">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+        aria-expanded="false" aria-label="Toggle navigation"></button>
+    <div class="collapse navbar-collapse" id="collapsibleNavId">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+             <router-link :to="{name: 'about'}" class="nav-link" >About</router-link>
+            </li>
+            <li class="nav-item">
+                 <router-link :to="{name : 'home'}" class="nav-link" >Home</router-link>
+            </li>
+               <li class="nav-item">
+                 <router-link v-bind:to="{name: 'user'}" class="nav-link" >User</router-link>
+            </li>
+          
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+    </div>
+</template>
+
+
+resources/js/pages/ about, error, home, user
+about
+<template>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">ini halaman about</div>
+
+                    <div class="card-body">
+                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequuntur odio id cumque blanditiis culpa totam perspiciatis corrupti! Doloribus nemo voluptatibus nostrum nulla culpa deleniti id vitae maxime facere temporibus possimus hic qui rerum facilis excepturi aliquam, 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+error
+<template>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header"></div>
+    
+                    <div class="card-body">
+              <h2>   error 244</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+home
+<template>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">ini halaman home</div>
+    
+                    <div class="card-body">
+                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequuntur odio id cumque blanditiis culpa totam perspiciatis corrupti! Doloribus nemo voluptatibus nostrum nulla culpa deleniti id vitae maxime facere temporibus possimus hic qui rerum facilis excepturi aliquam, ab eveniet neque eligendi dignissimos quia repellendus. Temporibus inventore ad unde, dolore autem dolorum!      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+user
+<template>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    
+                    <!-- jika nama mempunyai value yang diisi dari router link provile ada, maka tampilkan. ini mengacu pada route yang diberikan tanda tanya -->
+                    <section v-if="$route.params.usernama">
+                    <div class="card-header">                                                
+                        ini halaman {{usernama}}    
+                        <br>
+                        <router-link to="/user">kembali</router-link>                           
+                    </div>
+                    </section>
+
+                      <section v-else>
+                    <div class="card-header">                                                
+                        ini halaman user   
+                            <li v-for="item in nama" :key="item">
+                                <!-- cara 1 menggunakan link router -->
+                                   <!-- <router-link :to="tuju_halaman(item.nama)">{{item.nama}}</router-link> -->
+
+                                <!-- cara 2 menggunakan elemen href -->
+                            <a href="#"  @click.prevent='lihat_user(item.nama)'>{{item.nama}}</a>
+
+                             </li>                                
+                    </div>
+                    </section>                   
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        props: ['usernama'],
+        data (){
+            return {
+                nama : [
+                    {id :1, nama : 'ronaldo'},
+                    {id :2, nama : 'messi'},
+                    {id :3, nama : 'neymar'},
+                ]
+            }
+        },
+        methods : {
+            // cara1
+            // tuju_halaman(tes){
+            //     return '/user/' + tes;
+            // },
+
+            
+            lihat_user(tes) {
+                //dengan string
+            // this.$router.push('/user/' + tes);
+
+            //dengan objek
+            this.$router.push({
+                //name diambil dari
+                name : 'user',
+                params : {usernama : tes }
+            });
+            }
+        }
+    }
+</script>
+
+resources/js/app.js
+<script> 
+require('./bootstrap');
+window.Vue = require('vue');
+import App from './App.vue';
+
+
+//ini mengarahkan ke file router.js
+import router from './router.js'
+
+const app = new Vue({
+    el: '#app',
+    router,
+    components : {
+        App
+    }
+});
+
+</script>
+
+resource/js/app.vue
+<template>
+    <div>
+      <navBar></navBar>
+  <router-view></router-view>
+        
+    </div>
+</template>
+
+<script>
+import navBar from './components/navBar.vue';
+
+    export default {
+       components : {
+           navBar
+       }
+    }
+</script>
+
+resources/js/router.js
+<script> 
+
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+
+const Home = require('./pages/home.vue').default;
+import About from './pages/about.vue'
+import User from './pages/user.vue'
+import error from './pages/error.vue'
+
+const routes = [       
+        {
+            path: '/home',
+            name: 'home',
+            component: Home,   
+            meta: { title: 'home' }           
+        },
+        {
+            path: '/about',
+            name: 'about',
+            component: About,   
+            meta: { title: 'about' }  
+        },  
+        {
+            //dengan memberikan tanda tanya itu mengirim data lewat props
+            path: '/user/:usernama?',
+            name: 'user',
+            component: User,  
+            meta: { title: 'user' },
+            props: true           
+        },  
+        {
+            path : '*',
+            meta: { title: 'error' },
+            component : error,
+        }
+]
+
+const router = new VueRouter ({
+    mode : 'history',
+    linkActiveClass : 'active',
+    routes : routes
+    // bisa saja ditulis routes  karena varibel nya sama
+});
+
+//ini untuk title
+router.beforeEach((to, from, next) => {
+    document.title = to.meta.title
+
+    next()
+});
+
+
+
+export default router
+</script>
+
+ini di view blade
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Laravel</title>
+
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+
+
+
+
+    </head>
+    <body>
+      <div id="app">             
+         <app></app>       
+      </div>
+      <script src="/js/app.js"></script> 
+    </body>
+</html>
+
+public/css/style.css
+<style>
+.active {
+    background-color: brown;
+}
+</style>
+
