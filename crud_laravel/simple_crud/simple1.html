@@ -1,0 +1,358 @@
+home.vue
+<template>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+              
+                <h2>ini halaman home</h2> <br>
+                <form action="#">
+              
+                    <input type="text" placeholder="nama" v-model="nama">
+                    <input type="text" placeholder="keterampilan"  v-model="keterampilan">
+                    <button @click.prevent="tambah()">proses</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        data (){
+            return {
+                nama : '',
+                keterampilan : ''
+            }
+        },
+        methods : {
+            tambah () {
+              axios.post('/api/profils_store', {
+                    nama: this.nama,
+                    keterampilan: this.keterampilan
+                })
+                .then((response) => {
+                    console.log(response.data);
+                        //   alert('berhasil');
+                        this.$router.push({path : '/user'})
+                })
+                .catch( (error) => {
+                    // console.log(error);
+                        //   alert('gagal');
+                });
+            }
+        }
+    }
+</script>
+===========================
+edit.vue
+<template>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">ini halaman edit
+                        <router-link :to="{name : 'user'}">balik</router-link>
+                    </div>
+                    <form v-on:submit.prevent="perbarui($route.params.data_id)">
+                    <div class="card-body">
+                        nama : <input type="text" v-model="profil.nama"> <br>      
+                            keterampilan : <input type="text" v-model="profil.keterampilan"> <br>           
+                            <button>proses</button>
+                    </div>
+                 </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        data () {
+            return {
+                profil : {}
+            }
+        },
+
+       created () {
+           let tes = this.$route.params.data_id;
+             axios.get(`/api/profils_edit/${tes}`)
+                .then((response) => {
+                    console.log(response.data);  
+                    return this.profil = response.data                                          
+                })
+                .catch( (error) => {
+                    // console.log(error);
+                        //   alert('gagal');
+                        
+                });
+       },
+       methods : {
+           perbarui(id){
+             axios.post(`/api/profils_update/${id}`, this.profil)
+                .then((response) => {
+                    console.log(response.data);  
+                    this.$router.push("/user");
+                })
+                .catch( (error) => {
+                    // console.log(error);
+                        //   alert('gagal');
+                        
+                });
+           }
+       }
+    }
+</script>
+==================================
+user.vue
+<template>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">                                                                                                                                               
+                          <table class="table">
+                                  ini halaman user  
+                             <tr><th>No</th> <th>Nama</th><th>Keterampilan</th> <th>Aksi</th> </tr>                                                                              
+                     
+                             <tr v-for="(item, index) in biodata" :key="item" >
+                                 <td>{{index+1}}</td>
+                                 <td> {{item.nama}}</td>
+                                 <td>{{item.keterampilan}}</td>
+                                 <td> 
+                                      <button @click.prevent='edit_user(item.id)'>edit</button>                                     
+                                     <button @click.prevent="hapus(item.id)">Hapus</button>
+                               </td>
+                             </tr>
+                          </table>
+                              
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {     
+        data (){
+            return {
+                biodata : []
+            }
+        },              
+        mounted () {
+            axios.get('/api/profils').then( (response) => {
+               this.biodata = response.data;
+            })
+        },
+        methods : {              
+            hapus (id) {
+                    axios.delete(`/api/profils_delete/${id}`)
+                    .then((response) => {
+                        console.log(response.data);
+                            alert(response.data );
+                            //berfungsi tampilan hilang..tampilannya aja hehe
+                            this.biodata.splice(this.biodata.indexOf(id), 1);
+                    })
+                    .catch( (error) => {
+                        // console.log(error);
+                            //   alert('gagal');
+                            
+                    });
+            },
+            edit_user(tes) {
+              this.$router.push({
+                  name : 'edit_user',
+                  params : {data_id : tes}
+              })
+            }
+        }
+    }
+</script>
+===================
+route.js
+<script>
+
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+
+const Home = require('./pages/home.vue').default;
+import About from './pages/about.vue'
+import User from './pages/user.vue'
+import Edit_user from './pages/edit.vue'
+import error from './pages/error.vue'
+
+const routes = [       
+        {
+            path: '/home',
+            name: 'home',
+            component: Home,   
+            meta: { title: 'home' }           
+        },
+        {
+            path: '/about',
+            name: 'about',
+            component: About,   
+            meta: { title: 'about' }  
+        },  
+        {           
+            path: '/user/',
+            name: 'user',
+            component: User,  
+            meta: { title: 'user' },                
+        },  
+        {           
+            path: '/edit_user/:data_id?',
+            name: 'edit_user',
+            component: Edit_user,  
+            meta: { title: 'edit_user' }                   
+        },  
+        {
+            path : '*',
+            meta: { title: 'error' },
+            component : error,
+        }
+]
+
+const router = new VueRouter ({
+    mode : 'history',
+    linkActiveClass : 'active',
+    routes : routes
+    // bisa saja ditulis routes  karena varibel nya sama
+});
+
+//ini untuk title
+router.beforeEach((to, from, next) => {
+    document.title = to.meta.title
+
+    next()
+});
+
+
+
+export default router
+</script>
+
+=======================
+app.js
+<script>
+require('./bootstrap');
+window.Vue = require('vue');
+import App from './App.vue';
+
+
+//ini mengarahkan ke file router.js
+import router from './router.js'
+
+const app = new Vue({
+    el: '#app',
+    router,
+    components : {
+        App
+    }
+});
+
+</script>
+=======================
+
+components/navbar.vue
+<template>
+    <div>
+    <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: black;">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+        aria-expanded="false" aria-label="Toggle navigation"></button>
+    <div class="collapse navbar-collapse" id="collapsibleNavId">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+             <router-link :to="{name: 'about'}" class="nav-link" >About</router-link>
+            </li>
+            <li class="nav-item">
+                 <router-link :to="{name : 'home'}" class="nav-link" >Home</router-link>
+            </li>
+               <li class="nav-item">
+                 <router-link v-bind:to="{name: 'user'}" class="nav-link" >User</router-link>
+            </li>
+          
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+    </div>
+</template>
+
+=============
+App.vue
+<template>
+    <div>
+      <navBar></navBar>
+  <router-view></router-view>
+        
+    </div>
+</template>
+
+<script>
+import navBar from './components/navBar.vue';
+
+    export default {
+       components : {
+           navBar
+       }
+    }
+</script>
+=====================
+profilController
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\profil;
+
+class profilController extends Controller
+{
+    public function index ()
+    {
+        $data =DB::table('profils')->get();
+        return response()->json($data);
+    }
+    public function store (Request $request)
+    {    
+        $data =DB::table('profils')->insert($request->all());
+        return response()->json($request->all());
+    }
+
+    public function delete($id)
+    {
+        $data = DB::table('profils')->where('id', '=', $id);
+        $data->delete();
+        return response()->json('berhasil');
+    }
+    public function edit($id)
+    {
+        $data = profil::find($id);
+        return response()->json($data);
+    }
+    public function update(Request $request, $id)
+    {
+        $data = profil::find($id);
+         $data->update($request->all());
+        return response()->json($data);
+    }
+}
+
+==================
+api.php
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/profils', 'profilController@index');
+Route::post('/profils_store', 'profilController@store');
+Route::delete('/profils_delete/{id}', 'profilController@delete');
+Route::get('/profils_edit/{id}', 'profilController@edit');
+Route::post('/profils_update/{id}', 'profilController@update');
