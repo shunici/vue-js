@@ -198,3 +198,21 @@ export default {
     }
 }
 </script>
+
+controller php
+ public function index()
+    {
+        //ORDER BY NYA BERDASARKAN PARAMETER YANG DIKIRIM DARI VUEJS
+        //SEHINGGA PENGURUTAN DATANYA SESUAI DENGAN KOLOM YG DIINGINKAN OLEH USER
+        $produks = produk::orderBy(request()->sortby, request()->sortbydesc)
+            //JIKA Q ATAU PARAMETER PENCARIAN INI TIDAK KOSONG
+            ->when(request()->q, function($produks) {
+                //MAKA FUNGSI FILTER AKAN DIJALANKAN
+                $produks = $produks->where('nama', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('panjang', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('lebar', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('uk_alias', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('stok_sekarang', 'LIKE', '%' . request()->q . '%');
+        })->paginate(request()->per_page); //KEMUDIAN LOAD PAGINATIONNYA BERDASARKAN LOAD PER_PAGE YANG DIINGINKAN OLEH USER
+        return response()->json(['status' => 'success', 'data' => $produks]);
+    }
