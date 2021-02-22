@@ -1,0 +1,200 @@
+
+component reusable
+
+<template>
+    <div class="row">
+        <div class="col-md-4 mb-2">
+            <div class="form-inline">
+                <label class="mr-2">Showing</label>
+                <select class="form-control" v-model="meta.perHalaman" @change="muatPerHalaman">
+                       <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <label class="ml-2">Entries</label>
+            </div>
+        </div>
+        <div class="col-md-4 offset-md-4">
+            <div class="form-inline float-right">
+                <label class="mr-2">Search</label>
+                <input type="text" class="form-control" @input="search">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <b-table striped hover :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty>
+               
+            </b-table>   
+        </div>
+        <div class="col-md-6">
+            <p>Menampilkan {{ meta.dari }} sampai {{ meta.sampai }} dari {{ meta.seluruh }} items</p>
+        </div>
+        <div class="col-md-6">
+            <b-pagination
+                v-model="meta.halamanAktif"
+                :total-rows="meta.seluruh"
+                :per-page="meta.perHalaman"
+                align="right"
+                @change="ubah_Halaman"              
+            ></b-pagination>
+           
+        </div>
+
+     
+    </div>
+</template>
+
+<script>
+import _ from 'lodash'
+export default {
+    props: {
+        items: {
+            type: Array,
+            required: true
+        },
+        fields: {
+            type: Array,
+            required: true
+        },
+        meta: {
+            required: true
+        }
+       
+    },
+    data() {
+        return {
+            sortBy: null,
+            sortDesc: false,          
+        }
+    },
+    watch: {
+        sortBy(val) {          
+            this.$emit('sort', {
+                sortBy: this.sortBy,
+                sortDesc: this.sortDesc
+            })
+        },
+        sortDesc(val) {
+            this.$emit('sort', {
+                sortBy: this.sortBy,
+                sortDesc: this.sortDesc
+            })
+        }
+    },
+    methods: {
+        muatPerHalaman(val) {
+            this.$emit('per_page', this.meta.perHalaman)
+        },
+        ubah_Halaman(val) {
+            this.$emit('pagination', val)
+        },
+        search: _.debounce(function (e) {
+            this.$emit('search', e.target.value)
+        }, 500)
+       
+    }
+}
+</script>
+
+
+halaman utama
+
+<template>
+    <div class="container" style="padding-top: 30px">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">VueJS Datatables</h5>
+                    </div>
+                    <div class="card-body">
+                        <app-datatable 
+                            :items="items" 
+                            :fields="fields" 
+                            :meta="meta"                        
+                            @per_page="handlePerPage" 
+                            @pagination="handlePagination" 
+                            @search="handleSearch" 
+                            @sort="handleSort"                         
+                        />
+                    </div>
+                </div>
+                {{meta.perHalaman}}
+            </div>          
+        </div>
+    </div>
+</template>
+<script>
+import Datatable from '../../components/datatableComponent.vue'
+import axios from 'axios'
+export default {
+    created() {
+        this.loadPostsData()
+    },
+    data() {
+        return {
+            fields: [
+                {key: 'nama', sortable: true},
+                {key: 'panjang', sortable: true},
+                {key: 'lebar', sortable: true},
+                {key: 'uk_alias', sortable: true},
+                {key: 'stok_sekarang', sortable: true},
+            ],
+            items: [],
+            meta: [],
+            halamanAktif: 1,
+            per_page: 5,
+            search: '',
+            sortBy: 'created_at',
+            sortByDesc: false
+        }
+    },
+    components: {
+        'app-datatable': Datatable
+    },
+    methods: {
+        loadPostsData() {
+            let halamanAktif = this.search == '' ? this.halamanAktif:1
+            axios.get(`/api/produk`, {
+                params: {
+                    page: halamanAktif,
+                    per_page: this.per_page,
+                    q: this.search,
+                    sortby: this.sortBy,
+                    sortbydesc: this.sortByDesc ? 'DESC':'ASC'
+                }
+            })
+            .then((response) => {
+                let ambilData = response.data.data
+                this.items = ambilData.data
+                this.meta = {
+                    seluruh: ambilData.total,
+                    halamanAktif: ambilData.current_page,
+                    perHalaman: ambilData.per_page,
+                    dari: ambilData.from,
+                    sampai: ambilData.to,                  
+                }
+            })
+        },       
+        handlePerPage(val) {
+            this.per_page = val
+            this.loadPostsData()
+        },
+        handlePagination(val) {
+            this.halamanAktif = val
+            this.loadPostsData()
+        },
+        handleSearch(val) {
+            this.search = val
+            this.loadPostsData()
+        },
+        handleSort(val) {
+            this.sortBy = val.sortBy
+            this.sortByDesc = val.sortDesc
+            this.loadPostsData()
+        }
+      
+    }
+}
+</script>
