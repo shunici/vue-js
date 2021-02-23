@@ -1,0 +1,115 @@
+reusable komponent
+
+<template>
+    <div class="row">     
+        <div class="col-md-12">
+
+            <b-table striped hover :items="items" :fields="fields">                              
+            </b-table>   
+        </div>          
+    </div>
+</template>
+
+<script>
+import _ from 'lodash'
+export default {
+    props: {
+        items: {
+            type: Array,
+            required: true
+        },
+        fields: {
+            type: Array,
+            required: true
+        }              
+    },
+    data() {
+        return {
+            sortBy: null,
+            sortDesc: false,          
+        }
+    },
+    watch: {
+      
+    },
+    methods: {
+     
+       
+    }
+}
+</script>
+
+file utama
+
+<template>
+    <div class="container" style="padding-top: 30px">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">VueJS Datatables</h5>
+                    </div>
+                    <div class="card-body">
+                        <app-datatable 
+                            :items="items" 
+                            :fields="fields"                                                                      
+                        />
+                    </div>
+                </div>
+              
+            </div>          
+        </div>
+    </div>
+</template>
+<script>
+import Datatable from '../../components/datatableComponent.vue'
+import axios from 'axios'
+export default {
+    created() {
+        this.loadPostsData()
+    },
+    data() {
+        return {
+            fields: [
+                {key: 'nama', sortable: true},
+                {key: 'panjang', sortable: true},
+                {key: 'lebar', sortable: true},
+                {key: 'uk_alias', sortable: true},
+                {key: 'stok_sekarang', sortable: true},
+            ],
+            items: []               
+        }
+    },
+    components: {
+        'app-datatable': Datatable
+    },
+    methods: {
+        loadPostsData() {          
+            axios.get(`/api/produk`)
+            .then((response) => {
+                let ambilData = response.data.data               
+                this.items = ambilData                     
+            })
+        }               
+    }
+}
+</script>
+
+controller
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use App\produk;
+
+class produkController extends Controller
+{
+    public function index()
+    {
+        $produks = produk::all();
+        return response()->json(['status' => 'success', 'data' => $produks]);
+    }
+}
