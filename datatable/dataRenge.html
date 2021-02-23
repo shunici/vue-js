@@ -1,0 +1,269 @@
+reusable component
+
+<template>
+    <div class="row">
+
+         <div class="col-md-4 ">
+            <div class="form-inline">
+                   <label for="example-datepicker1">Mulai Tanggal</label>
+                <b-form-datepicker id="example-datepicker1" @input="mulai_tgl" class="mb-2" locale="id"></b-form-datepicker>
+            </div>
+            <div class="form-inline">
+                   <label for="example-datepicker2">Akhir Tanggal</label>
+                <b-form-datepicker id="example-datepicker2" @input="akhir_tgl" class="mb-2" locale="id"></b-form-datepicker>
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-inline">
+                <label class="mr-2">Showing</label>
+                <select class="form-control" v-model="meta.perHalaman" @change="muatPerHalaman">
+                       <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <label class="ml-2">Entries</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-inline float-right">
+                <label class="mr-2">Search</label>
+                <input type="text" class="form-control" @input="search">
+            </div>
+        </div>
+
+
+        <div class="col-md-12">
+            <b-table striped hover :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty>
+               
+            </b-table>   
+        </div>
+        <div class="col-md-6">
+            <p>Menampilkan {{ meta.dari }} sampai {{ meta.sampai }} dari {{ meta.seluruh }} items</p>
+        </div>
+
+        
+        <div class="col-md-6">
+            <b-pagination
+                v-model="meta.halamanAktif"
+                :total-rows="meta.seluruh"
+                :per-page="meta.perHalaman"
+                align="right"
+                @change="ubah_Halaman"              
+            ></b-pagination>
+           
+        </div>
+
+     
+    </div>
+</template>
+
+<script>
+import _ from 'lodash'
+export default {
+    props: {
+        items: {
+            type: Array,
+            required: true
+        },
+        fields: {
+            type: Array,
+            required: true
+        },
+        meta: {
+            required: true
+        }
+       
+    },
+    data() {
+        return {
+            sortBy: null,
+            sortDesc: false,          
+        }
+    },
+    watch: {
+        sortBy(val) {          
+            this.$emit('sort', {
+                sortBy: this.sortBy,
+                sortDesc: this.sortDesc
+            })
+        },
+        sortDesc(val) {
+            this.$emit('sort', {
+                sortBy: this.sortBy,
+                sortDesc: this.sortDesc
+            })
+        }
+    },
+    methods: {
+        muatPerHalaman(val) {
+            this.$emit('per_page', this.meta.perHalaman)
+        },
+        ubah_Halaman(val) {
+            this.$emit('pagination', val)
+        },
+        search: _.debounce(function (e) {
+            this.$emit('search', e.target.value)
+        }, 500),
+        mulai_tgl(val){
+          this.$emit('mulai_tgl', val)
+        },
+        akhir_tgl(val){
+           this.$emit('akhir_tgl', val)
+        }
+       
+    }
+}
+</script>
+
+
+main app
+
+<template>
+    <div class="container" style="padding-top: 30px">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">VueJS Datatables</h5>
+                    </div>
+                    <div class="card-body">
+                        <app-datatable 
+                            :items="items" 
+                            :fields="fields" 
+                            :meta="meta"                        
+                            @per_page="handlePerPage" 
+                            @pagination="handlePagination" 
+                            @search="handleSearch" 
+                            @sort="handleSort" 
+                            @mulai_tgl="urus_mulai_tgl"                        
+                            @akhir_tgl ="urus_akhir_tgl"
+                        />
+                    </div>
+                </div>
+                {{mulai_tgl}}
+            </div>          
+        </div>
+    </div>
+</template>
+<script>
+import Datatable from '../../components/datatableComponent.vue'
+import axios from 'axios'
+export default {
+    created() {
+        this.loadPostsData()
+    },
+    data() {
+        return {
+            fields: [
+                {key: 'nama', sortable: true},
+                {key: 'panjang', sortable: true},
+                {key: 'lebar', sortable: true},
+                {key: 'uk_alias', sortable: true},
+                {key: 'stok_sekarang', sortable: true},
+            ],
+            items: [],
+            meta: [],
+            halamanAktif: 1,
+            per_page: 5,
+            search: '',
+            sortBy: 'created_at',
+            sortByDesc: false,
+            mulai_tgl: '',
+            akhir_tgl: ''
+        }
+    },
+    components: {
+        'app-datatable': Datatable
+    },
+    methods: {
+        loadPostsData() {
+            let halamanAktif = this.search == '' ? this.halamanAktif:1
+            axios.get(`/api/produk`, {
+                params: {
+                    page: halamanAktif,
+                    per_page: this.per_page,
+                    q: this.search,
+                    sortby: this.sortBy,
+                    sortbydesc: this.sortByDesc ? 'DESC':'ASC',
+                    mulai_tgl : this.mulai_tgl,
+                    akhir_tgl : this.akhir_tgl
+                }
+            })
+            .then((response) => {
+                let ambilData = response.data.data
+                console.log(ambilData)
+                this.items = ambilData.data
+                this.meta = {
+                    seluruh: ambilData.total,
+                    halamanAktif: ambilData.current_page,
+                    perHalaman: ambilData.per_page,
+                    dari: ambilData.from,
+                    sampai: ambilData.to,                  
+                }
+            })
+        },       
+        handlePerPage(val) {
+            this.per_page = val
+            this.loadPostsData()
+        },
+        handlePagination(val) {
+            this.halamanAktif = val
+            this.loadPostsData()
+        },
+        handleSearch(val) {
+            this.search = val
+            this.loadPostsData()
+        },
+        handleSort(val) {           
+            this.sortBy = val.sortBy
+            this.sortByDesc = val.sortDesc
+            this.loadPostsData()
+        },
+        urus_mulai_tgl(val){
+         this.mulai_tgl = val
+          this.loadPostsData()
+        },
+        urus_akhir_tgl(val){
+            this.akhir_tgl = val
+             this.loadPostsData()
+        }
+      
+    }
+}
+</script>
+
+controller
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use App\produk;
+
+class produkController extends Controller
+{
+    public function index()
+    {
+        //ORDER BY NYA BERDASARKAN PARAMETER YANG DIKIRIM DARI VUEJS
+        //SEHINGGA PENGURUTAN DATANYA SESUAI DENGAN KOLOM YG DIINGINKAN OLEH USER
+        $produks = produk::orderBy(request()->sortby, request()->sortbydesc)
+        //jika bernilai true datarenge 2 calender maka jalankan fungsi dibawah ini
+        ->when(request()->mulai_tgl and request()->akhir_tgl, function($produks){
+            $produks = $produks->whereBetween('created_at', array(request()->mulai_tgl, request()->akhir_tgl));
+        })   //JIKA Q ATAU PARAMETER PENCARIAN INI TIDAK KOSONG
+            ->when(request()->q, function($produks) {
+                //MAKA FUNGSI FILTER AKAN DIJALANKAN
+                $produks = $produks->where('nama', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('panjang', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('lebar', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('uk_alias', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('stok_sekarang', 'LIKE', '%' . request()->q . '%');
+        })->paginate(request()->per_page); //KEMUDIAN LOAD PAGINATIONNYA BERDASARKAN LOAD PER_PAGE YANG DIINGINKAN OLEH USER
+        return response()->json(['status' => 'success', 'data' => $produks]);
+    }
+}
