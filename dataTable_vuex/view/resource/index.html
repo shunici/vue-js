@@ -1,0 +1,68 @@
+ini adaah index.vue
+<template>
+    <div>
+            <div class="table-responsive">
+                  <b-table :items="todos.data" :fields="fields" show-empty>
+                  <template #cell(jadwal)="row">
+                  {{ row.item.name }}
+                  </template>
+                      <template #cell(deskripsi)="row">
+                      {{ row.item.note }}
+                      </template>
+                         <template #cell(tanggal_berakhir)="row">
+                  {{ row.item.due_date }}
+                  </template>
+                     <template #cell(status)="row">
+                       <span class="bade badge-success" v-if="row.item.status === 1"> Selesai</span>
+                       <span class="bade badge-info" v-else> Aktif</span>
+                  </template>
+                  </b-table>
+                    <b-pagination
+                    v-model="page"
+                    :total-rows="todos.total"
+                    :per-page="todos.per_page"
+                    aria-controls="my-table"
+                  ></b-pagination>
+            </div>
+      
+    </div>
+</template>
+<script>
+import {mapActions, mapState} from 'vuex'
+  export default {
+      name : 'TodoIndex',    
+    created(){
+        this.getTodos()
+    },
+    data() {
+      return {
+        items: [],
+        fields : ['jadwal', 'deskripsi', 'tanggal_berakhir', 'status', 'created_at']
+      }
+    },
+    watch : {
+      page (){
+        this.getTodos();
+      }
+    },
+    computed : {
+      ...mapState('todo', {
+        todos : state => state.todos,     
+      }),
+      page : {
+        get(){
+          return this.$store.state.todo.page
+        },
+        set(val){
+            this.$store.state.todo.page = val
+        }
+      }
+    },
+    methods : {
+...mapActions ('todo', ['getTodos'])
+    }
+
+    
+  
+  }
+</script>
