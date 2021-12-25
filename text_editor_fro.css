@@ -10,7 +10,7 @@ div.fr-wrapper>div>a {
 
 
 [data-f-id="pbf"] {
-  /* display: none !important; */
+  display: none !important;
         /* position: fixed; */
         /* z-index: -99999 !important; */
         font-size: 0px !important;
