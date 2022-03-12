@@ -94,6 +94,7 @@
                   db : {
                     judul : '',
                     dataJson : [], //kalo kurawal tidak bisa di push
+                     //dtjson ini lah tempat dinanamic key valuenya
                   }
                   
                     
